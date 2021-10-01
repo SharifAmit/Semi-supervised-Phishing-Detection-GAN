@@ -16,7 +16,7 @@ def tokenizer(alphabet,url_length=200):
         reverse_dictionary[i+1]=c
     return dictionary, reverse_dictionary
     
-def data_npz(good,bad,alphabet,dictionary,samples,url_length):
+def data_npz(good,bad,alphabet,dictionary,samples=50000,url_length=200,npz_filename='phishing.npz'):
         good_data = []   
         i = 0 
         for i in range(26000):
@@ -73,7 +73,7 @@ def data_npz(good,bad,alphabet,dictionary,samples,url_length):
         y_test = np.concatenate((good_label[x_train_len:samples,:], bad_label[x_train_len:samples,:]),axis=0)
         y_test_cat = to_categorical(y_test)
 
-        np.savez_compressed('phishing.npz', X_train=x_train, X_test=x_test, y_train=y_train_cat, y_test=y_test_cat)
+        np.savez_compressed(npz_filename, X_train=x_train, X_test=x_test, y_train=y_train_cat, y_test=y_test_cat)
 
 if __name__ == "__main__":
 
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     each_class_samples= args.n_samples //2
     dictionary, reverse_dictionary = tokenizer(alphabet,url_length= args.url_length)
 
-    data_npz(good,bad,alphabet,dictionary,samples=each_class_samples,url_length=args.length)
+    data_npz(good,bad,alphabet,dictionary,samples=each_class_samples,url_length=args.length,npz_filename=args.npz_filename)
 
     
 
