@@ -2,6 +2,8 @@
 
 This code is for our paper "Semi-supervised Conditional GAN for Simultaneous Generation and Detection of Phishing URLs: A Game theoretic Perspective" and currently is under review.
 
+![](img1.png)
+
 ### Arxiv Pre-print
 ```
 https://arxiv.org/abs/2108.01852
