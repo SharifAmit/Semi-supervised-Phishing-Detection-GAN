@@ -1,1 +1,1 @@
-# CS703_Paper
+# Semi-supervised-Phishing-Detection-GAN 
