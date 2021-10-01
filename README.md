@@ -44,3 +44,33 @@ sudo pip3 install -r requirements.txt
 https://www.kaggle.com/taruntiwarihp/phishing-site-urls
 ```
 
+### NPZ file conversion
+- Preprocess all the data to npz format using **data_preprocess.py** file. 
+```
+python3 data_preprocess.py --url_length=200 --npz_filename='phishing.npz' --n_samples=50000
+```
+- There are different flags to choose from. Not all of them are mandatory.
+```
+    '--url_length', type=int, default=200
+    '--npz_filename', type=str, default='phishing.npz'
+    '--n_sampels',types=int, default=50000,help='number of good and bad samples.'
+```
+
+## Training
+
+- Type this in terminal to run the train.py file
+```
+python3 train.py --npz_file=phishing.npz --batch_size=64 --epochs=200 --savedir=PhishGan --resume_training=no --latent_dim=50
+```
+- There are different flags to choose from. Not all of them are mandatory
+
+```
+   '--epochs', type=int, default=200
+   '--batch_size', type=int, default=64
+   '--npz_file', type=str, default='phishing.npz', help='path/to/npz/file'
+   '--latent_dim', type=int, default=50
+   '--savedir', type=str, required=False, help='path/to/save_directory',default='PhishGan'
+   '--resume_training', type=str, required=False,  default='no', choices=['yes','no']
+   '--weight_name_dis',type=str, help='path/to/discriminator/weight/.h5 file', required=False
+   '--weight_name_gen',type=str, help='path/to/generator/weight/.h5 file', required=False
+```
