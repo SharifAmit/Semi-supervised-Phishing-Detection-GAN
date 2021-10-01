@@ -3,9 +3,11 @@ from src.log_and_visualization import *
 from src.model import *
 import time
 import os
+import argparse
 import string 
 import gc
 import keras.backend as K
+from sklearn.utils import shuffle
 
 def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=200, n_batch=64,savedir="dummy"):
     # calculate the number of batches per training epoch
@@ -69,3 +71,39 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=200, n_batc
             #summarize_performance(i, g_model, latent_dim,X_real,n_samples=n_batch,savedir=savedir)
     plot_history(dr1_hist, dr2_hist, df1_hist, df2_hist, g_hist, gan_hist,savedir=savedir)        
     to_csv(dr1_hist, dr2_hist, df1_hist, df2_hist, g_hist, gan_hist,savedir=savedir)
+
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--epochs', type=int, default=200)
+    parser.add_argument('--batch_size', type=int, default=64)
+    parser.add_argument('--npz_file', type=str, default='phishing.npz', help='path/to/npz/file')
+    parser.add_argument('--latent_dim', type=int, default=50)
+    parser.add_argument('--savedir', type=str, required=False, help='path/to/save_directory',default='PhishGan')
+    parser.add_argument('--resume_training', type=str, required=False,  default='no', choices=['yes','no'])
+    parser.add_argument('--weight_name_dis',type=str, help='path/to/discriminator/weight/.h5 file', required=False)
+    parser.add_argument('--weight_name_gen',type=str, help='path/to/generator/weight/.h5 file', required=False)
+    args = parser.parse_args()
+
+
+    K.clear_session()
+    if not os.path.exists(args.savedir):
+        os.makedirs(args.savedir)
+    #create the discriminator
+    discriminator = define_discriminator()
+    #create the generator
+    generator = define_generator(args.latent_dim)
+
+    if args.resume_training == 'yes':
+        discriminator.load_weights(args.weight_name_dis)
+        generator.load_weights(args.weight_name_gen)
+
+    # create the gan
+    gan_model = define_gan(generator, discriminator)
+    # load image data
+    data = np.load(args.npz_file)
+    dataset = shuffle(data['X_train'], data['y_train'])
+    # train model
+    train(generator, discriminator, gan_model, dataset, latent_dim=args.latent_dim,n_epochs=args.epochs, n_batch=args.batch_size,savedir=args.savedir)
