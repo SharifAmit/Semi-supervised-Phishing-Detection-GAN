@@ -1,4 +1,4 @@
-# Semi-supervised-Phishing-Detection-GAN 
+# Semi-supervised-Phishing-Detection-GAN (UNDER REVIEW)
 
 This code is for our paper "Semi-supervised Conditional GAN for Simultaneous Generation and Detection of Phishing URLs: A Game theoretic Perspective" and is currently under review.
 
